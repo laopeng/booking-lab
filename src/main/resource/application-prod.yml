@@ -1,0 +1,20 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:h2:d:/.h2/lab
+    username: laopeng
+    password: wzx458950
+  h2:
+    console:
+      settings:
+        web-allow-others: true
+      enabled: true 
+security:
+  basic:
+    enabled: false
+logging:
+  level:
+    ltd: debug
