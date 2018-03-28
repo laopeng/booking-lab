@@ -50,7 +50,7 @@ public class Teacher implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	@PrimaryKeyJoinColumn
 	private User user;
-	
+
 	public String getId() {
 		return id;
 	}
@@ -89,6 +89,12 @@ public class Teacher implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	@Override
+	public String toString() {
+		return "Teacher [id=" + id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", user=" + user
+				+ "]";
 	}
 
 }

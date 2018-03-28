@@ -1,12 +1,15 @@
 package ltd.hlmr.po;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModel;
@@ -56,6 +59,13 @@ public class Student implements Serializable {
 	@PrimaryKeyJoinColumn
 	private User user;
 
+	@ApiModelProperty(value = "在此时间内被禁止使用")
+	private LocalDateTime disableDateTime;
+
+	@Transient
+	@ApiModelProperty(value = "是否被禁用")
+	private Boolean isDisable;
+
 	public String getId() {
 		return id;
 	}
@@ -102,6 +112,26 @@ public class Student implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public LocalDateTime getDisableDateTime() {
+		return disableDateTime;
+	}
+
+	public void setDisableDateTime(LocalDateTime disableDateTime) {
+		this.disableDateTime = disableDateTime;
+	}
+
+	/**
+	 * 判断学生在某个时间段是否被禁用系统
+	 * 
+	 * @return
+	 */
+	public Boolean getIsDisable() {
+		if (LocalDateTime.now().isBefore(disableDateTime)) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override

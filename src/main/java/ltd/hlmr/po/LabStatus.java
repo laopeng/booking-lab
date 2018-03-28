@@ -1,43 +1,22 @@
 package ltd.hlmr.po;
 
 import java.io.Serializable;
+
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(description = "实验室")
+@ApiModel(description = "实验室预约")
 @Entity
 public class LabStatus implements Serializable {
 
 	private static final long serialVersionUID = 153803788164653088L;
 
-	public LabStatus() {
-		super();
-	}
-
-	public LabStatus(Lab lab, String bookingDate, String bookingTimeRang, Status status) {
-		super();
-		this.lab = lab;
-		BookingDate = bookingDate;
-		BookingTimeRang = bookingTimeRang;
-		this.status = status;
-	}
-
-	@Id
-	@ApiModelProperty(value = "预约实验室")
-	@ManyToOne
-	private Lab lab;
-
-	@Id
-	@ApiModelProperty(value = "预约日期")
-	private String BookingDate;
-
-	@Id
-	@ApiModelProperty(value = "预约时间段")
-	private String BookingTimeRang;
+	@EmbeddedId
+	private LabStatusId id;
 
 	@ApiModelProperty(value = "状态")
 	private Status status;
@@ -46,28 +25,30 @@ public class LabStatus implements Serializable {
 		可用, 不可用
 	}
 
-	public Lab getLab() {
-		return lab;
+	@ApiModelProperty(value = "指导教师")
+	@ManyToOne
+	private Teacher teacher;
+
+	@ApiModelProperty(value = "预约学生")
+	@ManyToOne
+	private Student student;
+
+	public LabStatus() {
+		super();
 	}
 
-	public void setLab(Lab lab) {
-		this.lab = lab;
+	public LabStatus(LabStatusId id, Status status) {
+		super();
+		this.id = id;
+		this.status = status;
 	}
 
-	public String getBookingDate() {
-		return BookingDate;
+	public LabStatusId getId() {
+		return id;
 	}
 
-	public void setBookingDate(String bookingDate) {
-		BookingDate = bookingDate;
-	}
-
-	public String getBookingTimeRang() {
-		return BookingTimeRang;
-	}
-
-	public void setBookingTimeRang(String bookingTimeRang) {
-		BookingTimeRang = bookingTimeRang;
+	public void setId(LabStatusId id) {
+		this.id = id;
 	}
 
 	public Status getStatus() {
@@ -76,6 +57,27 @@ public class LabStatus implements Serializable {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public Teacher getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
+	}
+
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+
+	@Override
+	public String toString() {
+		return "LabStatus [id=" + id + ", status=" + status + ", teacher=" + teacher + ", student=" + student + "]";
 	}
 
 }

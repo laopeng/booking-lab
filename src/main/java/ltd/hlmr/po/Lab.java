@@ -50,4 +50,9 @@ public class Lab implements Serializable {
 		this.name = name;
 	}
 
+	@Override
+	public String toString() {
+		return "Lab [id=" + id + ", name=" + name + "]";
+	}
+	
 }
