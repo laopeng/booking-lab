@@ -34,7 +34,7 @@ public class LabStatusJob {
 	/**
 	 * 生成
 	 */
-	@Scheduled(cron = "0 0/1 * * * ?") // 每分钟执行一次
+	@Scheduled(cron = "0 0/5 * * * ?") // 每分钟执行一次
 	public void general() {
 		for (long i = 0L; i < 7; i++) {
 			LocalDate now = LocalDate.now();
