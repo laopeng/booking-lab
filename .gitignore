@@ -12,7 +12,6 @@ local.properties
 .classpath
 .project
 target/
-src/main/resource/web/node_modules/
 
 # External tool builders
 .externalToolBuilders/
