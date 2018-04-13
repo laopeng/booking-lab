@@ -22,8 +22,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers(HttpMethod.GET, "/**/*swagger*/**", "/**/health", "/**/api-docs", "/", "/*.html",
-						"/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js", "/**/*.png", "/static/**")
+				.antMatchers(HttpMethod.GET, "/**/*swagger*/**", "/**/health", "/**/api-docs", "/", "/favicon.ico",
+						"/**/*.css", "/**/*.js", "/**/*.png", "/static/**")
 				.permitAll().antMatchers("/**/token", "/**/h2-console/**", "/wechat").permitAll().anyRequest()
 				.authenticated().and().headers().frameOptions().disable().and().csrf().disable();
 	}
