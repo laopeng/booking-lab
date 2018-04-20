@@ -10,7 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Transient;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -42,9 +44,11 @@ public class Student implements Serializable {
 
 	@ApiModelProperty(value = "学号，不能为空", required = true)
 	@NotNull
+	@Column(unique = true)
 	private String number;
 
 	@ApiModelProperty(value = "专业")
+	@NotNull
 	private String subject;
 
 	@ApiModelProperty(value = "姓名")
@@ -53,17 +57,19 @@ public class Student implements Serializable {
 
 	@ApiModelProperty(value = "电话")
 	@NotNull
+	@Pattern(regexp = "^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$", message = "电话的格式不合法")
 	private String phone;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@PrimaryKeyJoinColumn
+	@Valid
 	private User user;
 
-	@ApiModelProperty(value = "在此时间内被禁止使用")
+	@ApiModelProperty(value = "在此时间内被禁止使用", hidden = true)
 	private LocalDateTime disableDateTime;
 
 	@Transient
-	@ApiModelProperty(value = "是否被禁用")
+	@ApiModelProperty(value = "是否被禁用", hidden = true)
 	private Boolean isDisable;
 
 	public String getId() {

@@ -3,6 +3,7 @@ package ltd.hlmr.controller;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +33,8 @@ public class AuthController {
 	@GetMapping("/token")
 	@ApiOperation(value = "根据账号和密码获取token，token在48小时内有效,过期后请再次调用。")
 	@ResponseBody
-	public String createAuthenticationToken(HttpServletRequest request, @RequestParam String username, String password)
-			throws IOException {
+	public String createAuthenticationToken(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam String username, String password) throws IOException {
 		if (!StringUtils.hasText(password)) {
 			password = username;
 		}
@@ -44,8 +45,9 @@ public class AuthController {
 		Request request2 = new Request.Builder().header("Authorization", credential)
 				.url(basePath + "oauth/token?grant_type=password&username=" + username + "&password=" + password)
 				.post(okhttp3.internal.Util.EMPTY_REQUEST).build();
-		Response response = okHttpClinet.newCall(request2).execute();
-		String result = response.body().string();
+		Response response2 = okHttpClinet.newCall(request2).execute();
+		response.setStatus(response2.code());
+		String result = response2.body().string();
 		logger.debug(result);
 		return result;
 	}

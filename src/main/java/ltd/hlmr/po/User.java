@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,24 +31,25 @@ public class User implements UserDetails {
 
 	@Id
 	@Column(name = "user_id")
-	@ApiModelProperty(value = "用户编号，自动生成，不用传递")
+	@ApiModelProperty(value = "用户编号，自动生成，不用传递", hidden = true)
 	private String id;
 
 	@ApiModelProperty(value = "账号，不能为空，长度不能超过64个字符", required = true)
 	@Column(unique = true)
+	@NotNull
 	private String username;
 
-	@ApiModelProperty(value = "密码，不能为空", required = true)
+	@ApiModelProperty(value = "密码，不能为空", required = true, hidden = true)
 	@Column(nullable = false)
 	private String password;
 
-	@ApiModelProperty(value = "描述")
+	@ApiModelProperty(value = "描述", hidden = true)
 	private String description;
 
-	@ApiModelProperty(value = "用户类型：M=管理员，S=学生，T=管理员")
+	@ApiModelProperty(value = "用户类型：M=管理员，S=学生，T=管理员", hidden = true)
 	private String type;
 
-	@ApiModelProperty(value = "状态：A=可用，F=禁用")
+	@ApiModelProperty(value = "状态：A=可用，F=禁用", hidden = true)
 	private String status;
 
 	@ApiModelProperty(value = "创建时间", dataType = "Date", hidden = true)
@@ -126,6 +128,14 @@ public class User implements UserDetails {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public Date getCreateDate() {

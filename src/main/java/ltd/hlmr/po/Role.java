@@ -44,6 +44,7 @@ public class Role implements Serializable {
 	private Date modifyDate;
 
 	@ManyToMany(mappedBy = "roles")
+	@JsonIgnore
 	private List<User> users;
 
 	@ManyToMany
