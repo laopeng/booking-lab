@@ -20,9 +20,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers("/**/token*").permitAll()
+		http.cors().and().authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers("/**/token*")
+				.permitAll()
 				.antMatchers(HttpMethod.GET, "/**/*swagger*/**", "/**/health", "/**/api-docs", "/", "/favicon.ico",
-						"/**/*.css", "/**/*.js", "/**/*.png", "/static/**")
+						"/*.jpg", "/**/*.css", "/**/*.js", "/**/*.png", "/static/**")
 				.permitAll().antMatchers(HttpMethod.POST, "/students").permitAll()
 				.antMatchers("/**/token", "/**/h2-console/**", "/wechat").permitAll().anyRequest().authenticated().and()
 				.headers().frameOptions().disable().and().csrf().disable();

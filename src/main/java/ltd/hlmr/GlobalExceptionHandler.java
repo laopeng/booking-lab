@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler(value = Exception.class)
+	@ExceptionHandler(value = RuntimeException.class)
 	@ResponseBody
 	public String jsonErrorHandler(HttpServletResponse response, RuntimeException e) throws Exception {
 		response.setStatus(500);

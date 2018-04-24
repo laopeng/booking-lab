@@ -101,13 +101,13 @@ public class Application {
 				 * 添加实验室
 				 */
 				String labId = IDGenerator.getId();
-				labRepository.save(new Lab(labId, "脑电实验室"));
+				labRepository.save(new Lab(labId, "脑电"));
 				labId = IDGenerator.getId();
-				labRepository.save(new Lab(labId, "眼动实验室"));
+				labRepository.save(new Lab(labId, "眼动"));
 				labId = IDGenerator.getId();
-				labRepository.save(new Lab(labId, "生物反馈实验室"));
+				labRepository.save(new Lab(labId, "生物反馈"));
 				labId = IDGenerator.getId();
-				labRepository.save(new Lab(labId, "心理测量（电子）实验室"));
+				labRepository.save(new Lab(labId, "心理测量"));
 				log.debug("Lab found with findAll():");
 				log.debug("-------------------------------");
 				for (Lab lab : labRepository.findAll()) {
