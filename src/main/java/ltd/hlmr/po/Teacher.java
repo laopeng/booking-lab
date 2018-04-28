@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModel;
@@ -51,6 +52,12 @@ public class Teacher implements Serializable {
 	@PrimaryKeyJoinColumn
 	private User user;
 
+	@Transient
+	private String key;
+
+	@Transient
+	private String value;
+
 	public String getId() {
 		return id;
 	}
@@ -89,6 +96,14 @@ public class Teacher implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getKey() {
+		return this.name;
+	}
+
+	public String getValue() {
+		return this.name;
 	}
 
 	@Override

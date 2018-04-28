@@ -5,7 +5,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +18,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import ltd.hlmr.po.LabStatus;
+import ltd.hlmr.po.LabStatusId;
 import ltd.hlmr.repository.LabStatusRepository;
 
 @RestController
@@ -32,5 +36,12 @@ public class LabStatusController {
 	public List<LabStatus> findList(String name, @ApiParam(value = "排序") Sort sort) {
 		String now = LocalDate.now().toString();
 		return labStatusRepository.findByIdLabNameAndIdBookingDateGreaterThanEqual(name, now, sort);
+	}
+
+	@PutMapping
+	@ApiOperation(value = "预约实验室")
+	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	public String chooseLabStatus(@AuthenticationPrincipal UserDetails userDetails,LabStatusId labStatusId, String teacherName) {
+		return "预约实验室成功";
 	}
 }
