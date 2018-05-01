@@ -14,7 +14,7 @@ public class LabStatusId implements Serializable {
 
 	private static final long serialVersionUID = -8733991768975193348L;
 
-	@ApiModelProperty(value = "预约实验室")
+	@ApiModelProperty(value = "实验室")
 	@ManyToOne
 	private Lab lab;
 

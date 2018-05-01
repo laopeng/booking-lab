@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 
 import ltd.hlmr.po.LabStatus;
 import ltd.hlmr.po.LabStatusId;
+import ltd.hlmr.po.Student;
 
 public interface LabStatusRepository extends HlmrRepository<LabStatus, LabStatusId> {
 	/**
@@ -25,4 +26,13 @@ public interface LabStatusRepository extends HlmrRepository<LabStatus, LabStatus
 	 * @return
 	 */
 	List<LabStatus> findByIdLabNameAndIdBookingDateGreaterThanEqual(String name, String now, Sort sort);
+
+	/**
+	 * 根据学生查询大于等于当天的预约情况
+	 * @param student
+	 * @param now
+	 * @return
+	 */
+	List<LabStatus> findByStudentAndIdBookingDateGreaterThanEqual(Student student, String now);
+
 }

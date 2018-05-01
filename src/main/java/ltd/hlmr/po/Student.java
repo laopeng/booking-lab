@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -63,6 +64,7 @@ public class Student implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	@PrimaryKeyJoinColumn
 	@Valid
+	@ApiModelProperty(value = "账号信息", hidden = true)
 	private User user;
 
 	@ApiModelProperty(value = "在此时间内被禁止使用", hidden = true)
@@ -134,8 +136,10 @@ public class Student implements Serializable {
 	 * @return
 	 */
 	public Boolean getIsDisable() {
-		if (LocalDateTime.now().isBefore(disableDateTime)) {
-			return true;
+		if (disableDateTime != null) {
+			if (LocalDateTime.now().isBefore(disableDateTime)) {
+				return true;
+			}
 		}
 		return false;
 	}

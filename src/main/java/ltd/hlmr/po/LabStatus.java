@@ -16,6 +16,7 @@ public class LabStatus implements Serializable {
 	private static final long serialVersionUID = 153803788164653088L;
 
 	@EmbeddedId
+	@ApiModelProperty(value = "实验室预约id")
 	private LabStatusId id;
 
 	@ApiModelProperty(value = "状态")
@@ -32,6 +33,13 @@ public class LabStatus implements Serializable {
 	@ApiModelProperty(value = "预约学生")
 	@ManyToOne
 	private Student student;
+
+	@ApiModelProperty(value = "审核状态")
+	private Audit audit;
+
+	public enum Audit {
+		未审, 通过
+	}
 
 	public LabStatus() {
 		super();
@@ -73,6 +81,14 @@ public class LabStatus implements Serializable {
 
 	public void setStudent(Student student) {
 		this.student = student;
+	}
+
+	public Audit getAudit() {
+		return audit;
+	}
+
+	public void setAudit(Audit audit) {
+		this.audit = audit;
 	}
 
 	@Override

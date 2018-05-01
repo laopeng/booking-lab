@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -68,7 +69,8 @@ public class User implements UserDetails {
 	@Transient
 	private Collection<? extends GrantedAuthority> authorities;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
+	@ApiModelProperty(value = "角色列表", hidden = true)
 	private List<Role> roles;
 
 	public User() {

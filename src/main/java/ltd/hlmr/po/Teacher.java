@@ -39,6 +39,7 @@ public class Teacher implements Serializable {
 
 	@ApiModelProperty(value = "姓名")
 	@NotNull
+	@Column(unique = true)
 	private String name;
 
 	@ApiModelProperty(value = "电话")
@@ -50,6 +51,7 @@ public class Teacher implements Serializable {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@PrimaryKeyJoinColumn
+	@ApiModelProperty(value = "账号信息", hidden = true)
 	private User user;
 
 	@Transient
