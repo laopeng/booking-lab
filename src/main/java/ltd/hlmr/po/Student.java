@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -14,6 +13,8 @@ import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -65,6 +66,7 @@ public class Student implements Serializable {
 	@PrimaryKeyJoinColumn
 	@Valid
 	@ApiModelProperty(value = "账号信息", hidden = true)
+	@JsonIgnore
 	private User user;
 
 	@ApiModelProperty(value = "在此时间内被禁止使用", hidden = true)

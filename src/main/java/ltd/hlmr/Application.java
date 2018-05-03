@@ -19,13 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ltd.hlmr.po.Authority;
 import ltd.hlmr.po.Lab;
 import ltd.hlmr.po.Role;
-import ltd.hlmr.po.Student;
 import ltd.hlmr.po.Teacher;
 import ltd.hlmr.po.User;
 import ltd.hlmr.repository.AuthorityRepository;
 import ltd.hlmr.repository.LabRepository;
 import ltd.hlmr.repository.RoleRepository;
-import ltd.hlmr.repository.StudentRepository;
 import ltd.hlmr.repository.TeacherRepository;
 import ltd.hlmr.repository.UserRepository;
 import ltd.hlmr.util.IDGenerator;
@@ -42,8 +40,6 @@ public class Application {
 	private RoleRepository roleRepository;
 	@Autowired
 	private AuthorityRepository authorityRepository;
-	@Autowired
-	private StudentRepository studentRepository;
 	@Autowired
 	private LabRepository labRepository;
 	@Autowired
@@ -71,31 +67,10 @@ public class Application {
 						authorityRepository.save(new Authority(IDGenerator.getId(), "sys_role", "角色管理", new Date())));
 				authorities.add(authorityRepository
 						.save(new Authority(IDGenerator.getId(), "sys_authority", "权限管理", new Date())));
+				authorities.add(
+						authorityRepository.save(new Authority(IDGenerator.getId(), "is_teacher", "教师权限", new Date())));
 				roles.add(roleRepository
 						.save(new Role(IDGenerator.getId(), "sys_manager", "系统管理员", new Date(), authorities)));
-				userRepository.save(new User(IDGenerator.getId(), "admin", passwordEncoder.encode("admin"), "管理员", "M",
-						new Date(), "A", roles));
-				log.debug("Users found with findAll():");
-				log.debug("-------------------------------");
-				for (User user : userRepository.findAll()) {
-					log.debug("用户的基本信息：" + user.toString());
-					log.debug("用户的角色信息：" + roleRepository.findByUsers_Id(user.getId()));
-					log.debug("用户的权限信息：" + authorityRepository.findByRoles_Users_Id(user.getId()));
-				}
-				log.debug("------------------------------");
-
-				/*
-				 * 添加测试学生帐号
-				 */
-				String studentId = IDGenerator.getId();
-				studentRepository.save(new Student(studentId, "8591", "网络工程", "彭奕", "15622274512", new User(studentId,
-						"openid", passwordEncoder.encode("openid"), "测试的学生帐号", "S", new Date(), "A", null)));
-				log.debug("Student found with findAll():");
-				log.debug("-------------------------------");
-				for (Student student : studentRepository.findAll()) {
-					log.debug("测试学生的信息：" + student.toString());
-				}
-				log.debug("------------------------------");
 
 				/*
 				 * 添加实验室
@@ -120,31 +95,31 @@ public class Application {
 				 */
 				String teacherId = IDGenerator.getId();
 				teacherRepository.save(new Teacher(teacherId, "欧进兵", "", "syy@gzucm.edu.cn", new User(teacherId,
-						"oujinbing", passwordEncoder.encode("oujinbing"), "指导教师", "S", new Date(), "A", null)));
+						"oujinbing", passwordEncoder.encode("oujinbing"), "指导教师", "S", new Date(), "A", roles)));
 				teacherId = IDGenerator.getId();
 				teacherRepository.save(new Teacher(teacherId, "江雪华", "", "jiangxuehua@gzucm.edu.cn", new User(teacherId,
-						"jiangxuehua", passwordEncoder.encode("jiangxuehua"), "指导教师", "S", new Date(), "A", null)));
+						"jiangxuehua", passwordEncoder.encode("jiangxuehua"), "指导教师", "S", new Date(), "A", roles)));
 				teacherId = IDGenerator.getId();
 				teacherRepository.save(new Teacher(teacherId, "马利军", "", "malj@gzucm.edu.cn", new User(teacherId,
-						"malijun", passwordEncoder.encode("malijun"), "指导教师", "S", new Date(), "A", null)));
+						"malijun", passwordEncoder.encode("malijun"), "指导教师", "S", new Date(), "A", roles)));
 				teacherId = IDGenerator.getId();
 				teacherRepository.save(new Teacher(teacherId, "陈玉霏", "", "chenyufei@gzucm.edu.cn", new User(teacherId,
-						"chenyufei", passwordEncoder.encode("chenyufei"), "指导教师", "S", new Date(), "A", null)));
+						"chenyufei", passwordEncoder.encode("chenyufei"), "指导教师", "S", new Date(), "A", roles)));
 				teacherId = IDGenerator.getId();
 				teacherRepository.save(new Teacher(teacherId, "任滨海", "", "renbinhai@gzucm.edu.cn", new User(teacherId,
-						"renbinhai", passwordEncoder.encode("renbinhai"), "指导教师", "S", new Date(), "A", null)));
+						"renbinhai", passwordEncoder.encode("renbinhai"), "指导教师", "S", new Date(), "A", roles)));
 				teacherId = IDGenerator.getId();
 				teacherRepository.save(new Teacher(teacherId, "龚文进", "", "gongwj@gzucm.edu.cn", new User(teacherId,
-						"gongwenjin", passwordEncoder.encode("gongwenjin"), "指导教师", "S", new Date(), "A", null)));
+						"gongwenjin", passwordEncoder.encode("gongwenjin"), "指导教师", "S", new Date(), "A", roles)));
 				teacherId = IDGenerator.getId();
 				teacherRepository.save(new Teacher(teacherId, "图雅", "", "ty@gzucm.edu.cn", new User(teacherId, "tuya",
-						passwordEncoder.encode("tuya"), "指导教师", "S", new Date(), "A", null)));
+						passwordEncoder.encode("tuya"), "指导教师", "S", new Date(), "A", roles)));
 				teacherId = IDGenerator.getId();
 				teacherRepository.save(new Teacher(teacherId, "黄时华", "", "hshjg@gzucm.edu.cn", new User(teacherId,
-						"huangshihua", passwordEncoder.encode("huangshihua"), "指导教师", "S", new Date(), "A", null)));
+						"huangshihua", passwordEncoder.encode("huangshihua"), "指导教师", "S", new Date(), "A", roles)));
 				teacherId = IDGenerator.getId();
 				teacherRepository.save(new Teacher(teacherId, "李璟", "", "gzylj@gzucm.edu.cn", new User(teacherId,
-						"lijing", passwordEncoder.encode("lijing"), "指导教师", "S", new Date(), "A", null)));
+						"lijing", passwordEncoder.encode("lijing"), "指导教师", "S", new Date(), "A", roles)));
 				log.debug("Teacher found with findAll():");
 				log.debug("-------------------------------");
 				for (Teacher teacher : teacherRepository.findAll()) {

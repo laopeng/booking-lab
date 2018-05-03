@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +40,17 @@ public class LabStatusController {
 	private StudentRepository studentRepository;
 	@Autowired
 	private TeacherRepository teacherRepository;
+
+	@GetMapping("/all")
+	@ApiOperation(value = "查询所有实验室状态")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer "),
+			@ApiImplicitParam(name = "sort", value = "排序", paramType = "query", defaultValue = "idBookingDate,asc"),
+			@ApiImplicitParam(name = "page", value = "第几页", paramType = "query", defaultValue = "0"),
+			@ApiImplicitParam(name = "size", value = "每页几条", paramType = "query", defaultValue = "20") })
+	public Page<LabStatus> findAllList(Pageable pageable) {
+		return labStatusRepository.findAll(pageable);
+	}
 
 	@GetMapping
 	@ApiOperation(value = "查询七天内的实验室状态")

@@ -10,6 +10,8 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -52,6 +54,7 @@ public class Teacher implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	@PrimaryKeyJoinColumn
 	@ApiModelProperty(value = "账号信息", hidden = true)
+	@JsonIgnore
 	private User user;
 
 	@Transient
