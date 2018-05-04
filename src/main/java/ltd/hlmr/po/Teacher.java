@@ -11,6 +11,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -54,7 +55,6 @@ public class Teacher implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	@PrimaryKeyJoinColumn
 	@ApiModelProperty(value = "账号信息", hidden = true)
-	@JsonIgnore
 	private User user;
 
 	@Transient
@@ -95,10 +95,12 @@ public class Teacher implements Serializable {
 		this.email = email;
 	}
 
+	@JsonIgnore
 	public User getUser() {
 		return user;
 	}
 
+	@JsonDeserialize
 	public void setUser(User user) {
 		this.user = user;
 	}

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,12 +24,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import ltd.hlmr.po.LabStatus;
 import ltd.hlmr.po.LabStatus.Status;
-import ltd.hlmr.po.LabStatus.Audit;
 import ltd.hlmr.po.Student;
-import ltd.hlmr.po.Teacher;
 import ltd.hlmr.repository.LabStatusRepository;
 import ltd.hlmr.repository.StudentRepository;
-import ltd.hlmr.repository.TeacherRepository;
+import ltd.hlmr.service.LabStatusService;
 
 @RestController
 @RequestMapping("/lab/status")
@@ -39,7 +38,7 @@ public class LabStatusController {
 	@Autowired
 	private StudentRepository studentRepository;
 	@Autowired
-	private TeacherRepository teacherRepository;
+	private LabStatusService labStatusService;
 
 	@GetMapping("/all")
 	@ApiOperation(value = "查询所有实验室状态")
@@ -48,7 +47,10 @@ public class LabStatusController {
 			@ApiImplicitParam(name = "sort", value = "排序", paramType = "query", defaultValue = "idBookingDate,asc"),
 			@ApiImplicitParam(name = "page", value = "第几页", paramType = "query", defaultValue = "0"),
 			@ApiImplicitParam(name = "size", value = "每页几条", paramType = "query", defaultValue = "20") })
-	public Page<LabStatus> findAllList(Pageable pageable) {
+	public Page<LabStatus> findAllList(String labId, Pageable pageable) {
+		if (StringUtils.hasText(labId)) {
+			return labStatusRepository.findByIdLabId(labId, pageable);
+		}
 		return labStatusRepository.findAll(pageable);
 	}
 
@@ -60,6 +62,12 @@ public class LabStatusController {
 	public List<LabStatus> findList(String name, @ApiParam(value = "排序") Sort sort) {
 		String now = LocalDate.now().toString();
 		return labStatusRepository.findByIdLabNameAndIdBookingDateGreaterThanEqual(name, now, sort);
+	}
+
+	@PutMapping("/audit")
+	public String auditLabStatus(@AuthenticationPrincipal UserDetails userDetails, @RequestBody LabStatus labStatus) {
+		labStatusService.auditLabStatus(userDetails, labStatus);
+		return "操作成功！";
 	}
 
 	@GetMapping("/current")
@@ -97,42 +105,7 @@ public class LabStatusController {
 	@ApiOperation(value = "预约实验室")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
 	public String chooseLabStatus(@AuthenticationPrincipal UserDetails userDetails, @RequestBody LabStatus labStatus) {
-		synchronized (labStatus) {
-			Student student = studentRepository.findByUserUsername(userDetails.getUsername());
-			String now = LocalDate.now().toString();
-			List<LabStatus> list = labStatusRepository.findByStudentAndIdBookingDateGreaterThanEqual(student, now);
-			if (!list.isEmpty()) {
-				LabStatus current = list.get(0);
-				if (Audit.通过.equals(current.getAudit())) {
-					throw new RuntimeException(
-							"你预约的【" + current.getId().getLab().getName() + "】已通过审核，不可在三天内重新预约其他实验室。");
-				}
-			}
-
-			// 判断实验室是否可选
-			LabStatus labStatus2 = labStatusRepository.findOne(labStatus.getId());
-			if (labStatus2.getStatus().equals(Status.不可用)) {
-				throw new RuntimeException("你慢了一步，此实验已经被其他同学先预约了！");
-			}
-
-			// 把该学生其他预约重置为可选状态
-			for (LabStatus e : list) {
-				e.setStatus(Status.可用);
-				e.setStudent(null);
-				e.setTeacher(null);
-				e.setAudit(null);
-			}
-			labStatusRepository.save(list);
-
-			// 选课
-			Teacher teacher = teacherRepository.findByName(labStatus.getTeacher().getName());
-			labStatus2.setStatus(Status.不可用);
-			labStatus2.setStudent(student);
-			labStatus2.setTeacher(teacher);
-			labStatus2.setAudit(Audit.未审);
-			labStatusRepository.save(labStatus2);
-		}
-
+		labStatusService.chooseLabStatus(userDetails, labStatus);
 		return "预约实验室成功";
 	}
 }

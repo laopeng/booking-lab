@@ -1,10 +1,13 @@
 package ltd.hlmr.po;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -37,8 +40,12 @@ public class LabStatus implements Serializable {
 	@ApiModelProperty(value = "审核状态")
 	private Audit audit;
 
+	@ApiModelProperty(value = "审核日志")
+	@OneToMany(mappedBy = "labStatus")
+	private List<LabStatusLog> labStatusLogs;
+
 	public enum Audit {
-		未审, 通过
+		未审, 通过, 不通过, 过期
 	}
 
 	public LabStatus() {
@@ -84,11 +91,27 @@ public class LabStatus implements Serializable {
 	}
 
 	public Audit getAudit() {
+		String bookingDate = this.getId().getBookingDate();
+		if (this.audit != null) {
+			if (LocalDate.parse(bookingDate).isBefore(LocalDate.now())) {
+				if (this.audit.equals(Audit.未审)) {
+					return Audit.过期;
+				}
+			}
+		}
 		return audit;
 	}
 
 	public void setAudit(Audit audit) {
 		this.audit = audit;
+	}
+
+	public List<LabStatusLog> getLabStatusLogs() {
+		return labStatusLogs;
+	}
+
+	public void setLabStatusLogs(List<LabStatusLog> labStatusLogs) {
+		this.labStatusLogs = labStatusLogs;
 	}
 
 	@Override

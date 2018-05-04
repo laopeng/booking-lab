@@ -53,7 +53,7 @@ public class Application {
 	@Transactional
 	public CommandLineRunner init() {
 		return (args) -> {
-			User admin = userRepository.findByUsername("admin");
+			User admin = userRepository.findByUsername("oujinbing");
 			if (admin == null) {
 				/*
 				 * 初始化管理员信息

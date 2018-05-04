@@ -27,7 +27,7 @@ public class Lab implements Serializable {
 
 	@Id
 	@Column(name = "lab_id")
-	@ApiModelProperty(value = "实验室编号，23位主键，自动生成，不用传递。", hidden = true)
+	@ApiModelProperty(value = "实验室编号")
 	private String id;
 
 	@ApiModelProperty(value = "实验室名称")
