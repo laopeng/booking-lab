@@ -1,20 +1,28 @@
 spring:
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:h2:d:/.h2/lab
+    url: jdbc:h2:/root/.h2/lab
     username: laopeng
     password: wzx458950
   h2:
     console:
       settings:
         web-allow-others: true
-      enabled: true 
+      enabled: true
+  mail:
+    host: smtp.qq.com
+    default-encoding: UTF-8
+    username: 463508232@qq.com
+    password: rghhsquibqogcbba
+    port: 587
+mail:
+  from: 463508232@qq.com
 security:
   basic:
     enabled: false
 logging:
   level:
-    ltd: debug
+    root: error

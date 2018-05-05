@@ -23,7 +23,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		http.cors().and().authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers("/**/token*")
 				.permitAll()
 				.antMatchers(HttpMethod.GET, "/**/*swagger*/**", "/**/health", "/**/api-docs", "/", "/favicon.ico",
-						"/*.jpg", "/**/*.css", "/**/*.js", "/**/*.png", "/static/**")
+						"/*.jpg", "/**/*.css", "/**/*.js", "/**/*.png", "/**/**.html")
 				.permitAll().antMatchers(HttpMethod.POST, "/students").permitAll()
 				.antMatchers("/**/token", "/**/h2-console/**", "/wechat").permitAll().antMatchers(HttpMethod.OPTIONS)
 				.permitAll().antMatchers("/sys/users/**").hasAnyAuthority("sys_user").antMatchers("/sys/roles/**")

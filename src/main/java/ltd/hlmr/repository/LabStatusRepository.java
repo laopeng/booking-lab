@@ -30,6 +30,14 @@ public interface LabStatusRepository extends HlmrRepository<LabStatus, LabStatus
 	List<LabStatus> findByIdLabNameAndIdBookingDateGreaterThanEqual(String name, String now, Sort sort);
 
 	/**
+	 * 查询学生所有的预约信息
+	 * 
+	 * @param id
+	 * @return
+	 */
+	List<LabStatus> findByStudentId(String id);
+
+	/**
 	 * 根据学生查询大于等于当天的预约情况
 	 * 
 	 * @param student

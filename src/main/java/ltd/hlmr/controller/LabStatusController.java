@@ -23,7 +23,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import ltd.hlmr.po.LabStatus;
-import ltd.hlmr.po.LabStatus.Status;
 import ltd.hlmr.po.Student;
 import ltd.hlmr.repository.LabStatusRepository;
 import ltd.hlmr.repository.StudentRepository;
@@ -71,7 +70,7 @@ public class LabStatusController {
 	}
 
 	@GetMapping("/current")
-	@ApiOperation(value = "查询当前学生的选课情况")
+	@ApiOperation(value = "查询当前学生的预约情况")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
 	public LabStatus findCurrent(@AuthenticationPrincipal UserDetails userDetails) {
 		Student student = studentRepository.findByUserUsername(userDetails.getUsername());
@@ -88,16 +87,7 @@ public class LabStatusController {
 	@ApiOperation(value = "取消当前用户的预约")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
 	public String deleteCurrent(@AuthenticationPrincipal UserDetails userDetails) {
-		Student student = studentRepository.findByUserUsername(userDetails.getUsername());
-		String now = LocalDate.now().toString();
-		List<LabStatus> list = labStatusRepository.findByStudentAndIdBookingDateGreaterThanEqual(student, now);
-		for (LabStatus e : list) {
-			e.setStatus(Status.可用);
-			e.setStudent(null);
-			e.setTeacher(null);
-			e.setAudit(null);
-		}
-		labStatusRepository.save(list);
+		labStatusService.deleteCurrent(userDetails);
 		return "取消预约成功";
 	}
 

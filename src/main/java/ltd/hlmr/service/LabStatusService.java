@@ -1,6 +1,7 @@
 package ltd.hlmr.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +36,9 @@ public class LabStatusService {
 	@Autowired
 	private LabStatusLogRepository labStatusLogRepository;
 
+	@Autowired
+	private MailService mailService;
+
 	/**
 	 * 学生预约实验室
 	 * 
@@ -45,6 +49,10 @@ public class LabStatusService {
 	public void chooseLabStatus(UserDetails userDetails, LabStatus labStatus) {
 		synchronized (labStatus) {
 			Student student = studentRepository.findByUserUsername(userDetails.getUsername());
+			if (student.getIsDisable() != null && student.getIsDisable()) {
+				throw new RuntimeException(
+						"因取消了通过审核的预约，你已被禁止在" + student.getDisableDateTime().toString() + "之前进行预约实验室！");
+			}
 			String now = LocalDate.now().toString();
 			List<LabStatus> list = labStatusRepository.findByStudentAndIdBookingDateGreaterThanEqual(student, now);
 			if (!list.isEmpty()) {
@@ -81,6 +89,44 @@ public class LabStatusService {
 	}
 
 	/**
+	 * 学生取消预约
+	 * 
+	 * @param userDetails
+	 */
+	@Transactional
+	public void deleteCurrent(UserDetails userDetails) {
+		Student student = studentRepository.findByUserUsername(userDetails.getUsername());
+		String now = LocalDate.now().toString();
+		List<LabStatus> list = labStatusRepository.findByStudentAndIdBookingDateGreaterThanEqual(student, now);
+		boolean hasAudit = false;
+		for (LabStatus e : list) {
+			if (e.getAudit().equals(Audit.通过)) {
+				hasAudit = true;
+				LabStatusLog labStatusLog = new LabStatusLog();
+				labStatusLog.setId(IDGenerator.getId());
+				labStatusLog.setStudentUsername(student.getName());
+				labStatusLog.setLabStatus(e);
+				labStatusLog.setAuditTime(new Date());
+				labStatusLog.setContent("学生[" + student.getName() + "]取消了已通过审核的" + e.getId().getBookingDate()
+						+ e.getId().getBookingTimeRang() + e.getId().getLab().getName() + "实验室(指导老师["
+						+ e.getTeacher().getName() + "])!");
+				String title = "学生[" + student.getUser().getUsername() + "]取消了审核通过的实验室预约";
+				mailService.sendSimpleMail(e.getTeacher().getEmail(), title, labStatusLog.getContent());
+				labStatusLogRepository.save(labStatusLog);
+			}
+			e.setStatus(Status.可用);
+			e.setStudent(null);
+			e.setTeacher(null);
+			e.setAudit(null);
+		}
+		if (hasAudit) {
+			student.setDisableDateTime(LocalDateTime.now().plusDays(2));
+			studentRepository.save(student);
+		}
+		labStatusRepository.save(list);
+	}
+
+	/**
 	 * 教师审核实验室使用情况
 	 * 
 	 * @param userDetails
@@ -96,7 +142,6 @@ public class LabStatusService {
 		labStatusLog.setId(IDGenerator.getId());
 		labStatusLog.setStudentUsername(labStatus2.getStudent().getUser().getUsername());
 		labStatusLog.setTeacherName(teacher.getName());
-		labStatus2.getId();
 		labStatusLog.setLabStatus(labStatus2);
 		labStatusLog.setAuditTime(new Date());
 		String content = null;
@@ -104,6 +149,8 @@ public class LabStatusService {
 			content = "学生[" + labStatus2.getStudent().getName() + "]预约" + labStatus2.getId().getBookingDate()
 					+ labStatus2.getId().getBookingTimeRang() + "的" + labStatus2.getId().getLab().getName()
 					+ "实验室（指导教师[" + labStatus2.getTeacher().getName() + "]），由管理员审核通过。";
+			String title = "学生[" + labStatus2.getStudent().getName() + "]预约实验室审核通过";
+			mailService.sendSimpleMail(labStatus2.getTeacher().getEmail(), title, content);
 		} else {
 			content = "学生[" + labStatus2.getStudent().getName() + "]预约" + labStatus2.getId().getBookingDate()
 					+ labStatus2.getId().getBookingTimeRang() + "的" + labStatus2.getId().getLab().getName()

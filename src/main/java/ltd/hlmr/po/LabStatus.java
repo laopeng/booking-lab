@@ -8,6 +8,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -42,6 +43,7 @@ public class LabStatus implements Serializable {
 
 	@ApiModelProperty(value = "审核日志")
 	@OneToMany(mappedBy = "labStatus")
+	@OrderBy("auditTime desc")
 	private List<LabStatusLog> labStatusLogs;
 
 	public enum Audit {

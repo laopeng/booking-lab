@@ -31,7 +31,7 @@ public class LabStatusLog implements Serializable {
 	@ApiModelProperty(value = "日志内容")
 	private String content;
 
-	@ApiModelProperty(value = "审核时间")
+	@ApiModelProperty(value = "操作时间")
 	private Date auditTime;
 
 	@ApiModelProperty(value = "预约的实验室")

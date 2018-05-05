@@ -1,10 +1,11 @@
 package ltd.hlmr.repository;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import ltd.hlmr.po.LabStatusId;
 import ltd.hlmr.po.LabStatusLog;
+import java.lang.String;
 
 public interface LabStatusLogRepository extends HlmrRepository<LabStatusLog, String> {
-	List<LabStatusLog> findByLabStatusId(LabStatusId labStatusId);
+	Page<LabStatusLog> findByStudentUsername(String studentUsername, Pageable pageable);
 }

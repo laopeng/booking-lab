@@ -11,7 +11,15 @@ spring:
     console:
       settings:
         web-allow-others: true
-      enabled: true 
+      enabled: true
+  mail:
+    host: smtp.qq.com
+    default-encoding: UTF-8
+    username: 463508232@qq.com
+    password: rghhsquibqogcbba
+    port: 587
+mail:
+  from: 463508232@qq.com
 security:
   basic:
     enabled: false

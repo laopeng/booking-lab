@@ -70,7 +70,7 @@ public class WechatController {
 			article.setTitle("预约实验室");
 			article.setDescription("请点击进入系统操作（回复任意内容则重发此消息）");
 			article.setPicUrl(basePath + "lab.jpg");
-			article.setUrl(basePath + "?openid=" + textMessage.getFromUserName());
+			article.setUrl(basePath + "/wechat?openid=" + textMessage.getFromUserName());
 			articles.add(article);
 			graphicMessage.setArticles(articles);
 			graphicMessage.setMsgType("news");
