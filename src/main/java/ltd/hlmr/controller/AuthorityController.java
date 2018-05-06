@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,6 +41,7 @@ public class AuthorityController {
 	@PostMapping
 	@ApiOperation("新增权限")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public String add(@RequestBody Authority authority) {
 		authority.setId(IDGenerator.getId());
 		authority.setCreateDate(new Date());
@@ -52,6 +54,7 @@ public class AuthorityController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer "),
 			@ApiImplicitParam(name = "authorityId", value = "权限id", paramType = "path", required = true) })
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public String delete(@PathVariable String authorityId) {
 		authorityRepository.delete(authorityId);
 		return "删除成功";
@@ -62,6 +65,7 @@ public class AuthorityController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer "),
 			@ApiImplicitParam(name = "authorityIds", value = "权限id列表,格式为1,2,3", paramType = "query", required = true) })
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public String deleteList(@RequestParam String authorityIds) {
 		String[] ids = authorityIds.split(",");
 		authorityRepository.delete(ids);
@@ -73,6 +77,7 @@ public class AuthorityController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer "),
 			@ApiImplicitParam(name = "authorityId", value = "权限id", paramType = "path", required = true) })
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public String update(@RequestBody Authority authority, @PathVariable String authorityId) {
 		authority.setId(authorityId);
 		authority.setModifyDate(new Date());
@@ -83,6 +88,7 @@ public class AuthorityController {
 	@GetMapping("/all")
 	@ApiOperation("查询所有权限列表")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public List<Authority> findList() {
 		return authorityRepository.findAll();
 	}
@@ -93,6 +99,7 @@ public class AuthorityController {
 			@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer "),
 			@ApiImplicitParam(name = "page", paramType = "query"),
 			@ApiImplicitParam(name = "size", paramType = "query") })
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public Page<Authority> findPage(Pageable pageable) {
 		return authorityRepository.findAll(pageable);
 	}
@@ -100,6 +107,7 @@ public class AuthorityController {
 	@GetMapping("{authorityId}")
 	@ApiOperation("根据权限id查询权限信息")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public Authority findOne(@PathVariable String authorityId) {
 		return authorityRepository.findOne(authorityId);
 	}
@@ -116,6 +124,7 @@ public class AuthorityController {
 	@GetMapping("/user/{userId}")
 	@ApiOperation("根据用户id查询权限列表")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public List<Authority> findListByUserId(@PathVariable String userId) {
 		return authorityRepository.findByRoles_Users_Id(userId);
 	}
@@ -123,6 +132,7 @@ public class AuthorityController {
 	@GetMapping("/role/{roleId}")
 	@ApiOperation("根据角色id查询权限列表")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public List<Authority> findListByRoleId(@PathVariable String roleId) {
 		return authorityRepository.findByRoles_Id(roleId);
 	}

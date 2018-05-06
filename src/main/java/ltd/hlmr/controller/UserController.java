@@ -7,6 +7,7 @@ import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
@@ -38,6 +39,7 @@ public class UserController {
 	@PostMapping
 	@ApiOperation("新增用户")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public String add(@RequestBody User user) {
 		user.setId(IDGenerator.getId());
 		user.setCreateDate(new Date());
@@ -56,6 +58,7 @@ public class UserController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer "),
 			@ApiImplicitParam(name = "userId", value = "用户id", paramType = "path", required = true) })
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public String delete(@PathVariable String userId) {
 		userRepository.delete(userId);
 		return "删除成功";
@@ -66,6 +69,7 @@ public class UserController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer "),
 			@ApiImplicitParam(name = "userIds", value = "用户id列表，格式为1,2,3", paramType = "query", required = true) })
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public String deleteList(@RequestParam String userIds) {
 		String[] ids = userIds.split(",");
 		userRepository.delete(ids);
@@ -77,6 +81,7 @@ public class UserController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer "),
 			@ApiImplicitParam(name = "userId", value = "用户id", paramType = "path", required = true) })
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public String update(@RequestBody User user, @PathVariable String userId) {
 		User oldUser = userRepository.findOne(userId);
 		if (oldUser != null) {
@@ -101,6 +106,7 @@ public class UserController {
 	@GetMapping("/all")
 	@ApiOperation("查询所有用户列表")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public List<User> findList() {
 		return userRepository.findAll();
 	}
@@ -108,6 +114,7 @@ public class UserController {
 	@GetMapping
 	@ApiOperation("分页查询用户列表")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public Page<User> findList(Pageable pageable) {
 		return userRepository.findAll(pageable);
 	}
@@ -115,6 +122,7 @@ public class UserController {
 	@GetMapping("{userId}")
 	@ApiOperation("根据用户id查询用户信息")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public User findOne(@PathVariable String userId) {
 		return userRepository.findOne(userId);
 	}

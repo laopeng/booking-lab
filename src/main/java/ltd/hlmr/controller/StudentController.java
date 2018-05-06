@@ -7,6 +7,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
@@ -58,6 +59,7 @@ public class StudentController {
 			@ApiImplicitParam(name = "sort", value = "排序", paramType = "query", defaultValue = "idBookingDate,asc"),
 			@ApiImplicitParam(name = "page", value = "第几页", paramType = "query", defaultValue = "0"),
 			@ApiImplicitParam(name = "size", value = "每页几条", paramType = "query", defaultValue = "20") })
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public Page<Student> findList(String name, Pageable pageable) {
 		Student student = new Student();
 		if (StringUtils.hasText(name)) {
@@ -77,6 +79,7 @@ public class StudentController {
 	}
 
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public String delete(@PathVariable String id) {
 		studentService.delete(id);
 		return "解绑成功";

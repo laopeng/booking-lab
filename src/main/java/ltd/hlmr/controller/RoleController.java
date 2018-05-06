@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +39,7 @@ public class RoleController {
 	@PostMapping
 	@ApiOperation("新增角色")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public String add(@RequestBody Role role) {
 		role.setId(IDGenerator.getId());
 		role.setCreateDate(new Date());
@@ -50,6 +52,7 @@ public class RoleController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer "),
 			@ApiImplicitParam(name = "roleId", value = "角色id", paramType = "path", required = true) })
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public String delete(@PathVariable String roleId) {
 		roleRepository.delete(roleId);
 		return "删除成功";
@@ -60,6 +63,7 @@ public class RoleController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer "),
 			@ApiImplicitParam(name = "roleIds", value = "角色id列表,格式为1,2,3", paramType = "query", required = true) })
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public String deleteList(@RequestParam String roleIds) {
 		roleRepository.delete(roleIds);
 		return "批量删除成功";
@@ -70,6 +74,7 @@ public class RoleController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer "),
 			@ApiImplicitParam(name = "roleId", value = "角色id", paramType = "path", required = true) })
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public String update(@RequestBody Role role, @PathVariable String roleId) {
 		role.setId(roleId);
 		role.setModifyDate(new Date());
@@ -80,6 +85,7 @@ public class RoleController {
 	@GetMapping("/all")
 	@ApiOperation("查询所有角色列表")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public List<Role> findList() {
 		return roleRepository.findAll();
 	}
@@ -87,6 +93,7 @@ public class RoleController {
 	@GetMapping
 	@ApiOperation("分页查询角色列表")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public Page<Role> findList(Pageable pageable) {
 		return roleRepository.findAll(pageable);
 	}
@@ -94,6 +101,7 @@ public class RoleController {
 	@GetMapping("/{roleId}")
 	@ApiOperation("根据角色id查询角色信息")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public Role findOne(@PathVariable String roleId) {
 		return roleRepository.findOne(roleId);
 	}
@@ -101,6 +109,7 @@ public class RoleController {
 	@GetMapping("/user/{userId}")
 	@ApiOperation("根据用户id查询角色列表")
 	@ApiImplicitParam(name = "Authorization", value = "Bearer token", paramType = "header", required = true, defaultValue = "Bearer ")
+	@PreAuthorize("hasAuthority('is_teacher')")
 	public List<Role> findListByUserId(@PathVariable String userId) {
 		return roleRepository.findByUsers_Id(userId);
 	}

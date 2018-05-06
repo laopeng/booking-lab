@@ -2,6 +2,7 @@ package ltd.hlmr.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -9,6 +10,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 
 @Configuration
 @EnableResourceServer
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 	public static final String RESOURCE_ID = "lab";
@@ -23,7 +25,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		http.cors().and().authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers("/**/token*")
 				.permitAll()
 				.antMatchers(HttpMethod.GET, "/**/*swagger*/**", "/**/health", "/**/api-docs", "/", "/favicon.ico",
-						"/*.jpg", "/**/*.css", "/**/*.js", "/**/*.png", "/**/**.html")
+						"/**/*.jpg", "/**/*.css", "/**/*.js", "/**/*.png", "/**/**.html")
 				.permitAll().antMatchers(HttpMethod.POST, "/students").permitAll()
 				.antMatchers("/**/token", "/**/h2-console/**", "/wechat").permitAll().antMatchers(HttpMethod.OPTIONS)
 				.permitAll().antMatchers("/sys/users/**").hasAnyAuthority("sys_user").antMatchers("/sys/roles/**")

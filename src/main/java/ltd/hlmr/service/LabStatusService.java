@@ -104,13 +104,13 @@ public class LabStatusService {
 				hasAudit = true;
 				LabStatusLog labStatusLog = new LabStatusLog();
 				labStatusLog.setId(IDGenerator.getId());
-				labStatusLog.setStudentUsername(student.getName());
+				labStatusLog.setStudentUsername(student.getUser().getUsername());
 				labStatusLog.setLabStatus(e);
 				labStatusLog.setAuditTime(new Date());
 				labStatusLog.setContent("学生[" + student.getName() + "]取消了已通过审核的" + e.getId().getBookingDate()
 						+ e.getId().getBookingTimeRang() + e.getId().getLab().getName() + "实验室(指导老师["
 						+ e.getTeacher().getName() + "])!");
-				String title = "学生[" + student.getUser().getUsername() + "]取消了审核通过的实验室预约";
+				String title = "学生[" + student.getName() + "]取消了审核通过的实验室预约";
 				mailService.sendSimpleMail(e.getTeacher().getEmail(), title, labStatusLog.getContent());
 				labStatusLogRepository.save(labStatusLog);
 			}

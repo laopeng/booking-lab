@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
@@ -46,6 +47,7 @@ public class LabStatusController {
 			@ApiImplicitParam(name = "sort", value = "排序", paramType = "query", defaultValue = "idBookingDate,asc"),
 			@ApiImplicitParam(name = "page", value = "第几页", paramType = "query", defaultValue = "0"),
 			@ApiImplicitParam(name = "size", value = "每页几条", paramType = "query", defaultValue = "20") })
+	@PreAuthorize("hasAuthority('is_teacher')") 
 	public Page<LabStatus> findAllList(String labId, Pageable pageable) {
 		if (StringUtils.hasText(labId)) {
 			return labStatusRepository.findByIdLabId(labId, pageable);
@@ -64,6 +66,8 @@ public class LabStatusController {
 	}
 
 	@PutMapping("/audit")
+	@ApiOperation(value = "管理员审核预约")
+	@PreAuthorize("hasAuthority('is_teacher')") 
 	public String auditLabStatus(@AuthenticationPrincipal UserDetails userDetails, @RequestBody LabStatus labStatus) {
 		labStatusService.auditLabStatus(userDetails, labStatus);
 		return "操作成功！";

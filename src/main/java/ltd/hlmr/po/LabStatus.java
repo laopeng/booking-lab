@@ -2,6 +2,7 @@ package ltd.hlmr.po;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EmbeddedId;
@@ -9,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.PreUpdate;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,6 +42,9 @@ public class LabStatus implements Serializable {
 
 	@ApiModelProperty(value = "审核状态")
 	private Audit audit;
+
+	@ApiModelProperty(value = "修改时间")
+	private Date modifyTime;
 
 	@ApiModelProperty(value = "审核日志")
 	@OneToMany(mappedBy = "labStatus")
@@ -108,6 +113,14 @@ public class LabStatus implements Serializable {
 		this.audit = audit;
 	}
 
+	public Date getModifyTime() {
+		return modifyTime;
+	}
+
+	public void setModifyTime(Date modifyTime) {
+		this.modifyTime = modifyTime;
+	}
+
 	public List<LabStatusLog> getLabStatusLogs() {
 		return labStatusLogs;
 	}
@@ -121,4 +134,8 @@ public class LabStatus implements Serializable {
 		return "LabStatus [id=" + id + ", status=" + status + ", teacher=" + teacher + ", student=" + student + "]";
 	}
 
+	@PreUpdate
+	public void preUpdate() {
+		setModifyTime(new Date());
+	}
 }

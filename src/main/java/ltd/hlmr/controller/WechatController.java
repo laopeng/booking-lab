@@ -69,8 +69,8 @@ public class WechatController {
 			Article article = new Article();
 			article.setTitle("预约实验室");
 			article.setDescription("请点击进入系统操作（回复任意内容则重发此消息）");
-			article.setPicUrl(basePath + "lab.jpg");
-			article.setUrl(basePath + "/wechat?openid=" + textMessage.getFromUserName());
+			article.setPicUrl(basePath + "static/lab.jpg");
+			article.setUrl(basePath + "wechat/index.html?openid=" + textMessage.getFromUserName());
 			articles.add(article);
 			graphicMessage.setArticles(articles);
 			graphicMessage.setMsgType("news");
