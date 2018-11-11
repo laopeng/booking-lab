@@ -1,5 +1,6 @@
 package ltd.hlmr.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +20,18 @@ import ltd.hlmr.po.wechat.GraphicMessage;
 import ltd.hlmr.po.wechat.TextMessage;
 import ltd.hlmr.po.wechat.GraphicMessage.Article;
 import ltd.hlmr.util.WechatUtil;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 @RestController
 @RequestMapping("/wechat")
 @Api(tags = "提供给微信调用的接口")
 public class WechatController {
 	private static final Logger logger = LoggerFactory.getLogger(WechatController.class);
+	private static final String appId = "wx9c6eb91e9f9af205";
+	private static final String secret = "d29875f42f0b03afa79c6cbd162b4b54";
+	@Autowired
+	private OkHttpClient okHttpClinet;
 
 	/**
 	 * 验证微信服务器
@@ -78,5 +86,20 @@ public class WechatController {
 		} else {
 			return null;
 		}
+	}
+
+	@GetMapping("/user/token")
+	public String getUserAccessToken(String code) {
+		String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + secret + "&code="
+				+ code + "&grant_type=authorization_code";
+		Request request = new Request.Builder().url(url).build();
+		String result = null;
+		try {
+			okhttp3.Response response = okHttpClinet.newCall(request).execute();
+			result = response.body().string();
+		} catch (IOException e) {
+			logger.error("请求微信用户token接口出错：", e);
+		}
+		return result;
 	}
 }
