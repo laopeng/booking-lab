@@ -28,8 +28,8 @@ import okhttp3.Request;
 @Api(tags = "提供给微信调用的接口")
 public class WechatController {
 	private static final Logger logger = LoggerFactory.getLogger(WechatController.class);
-	private static final String appId = "wx9c6eb91e9f9af205";
-	private static final String secret = "d29875f42f0b03afa79c6cbd162b4b54";
+	private static final String appId = "wxcacab1dfed5bc106";
+	private static final String secret = "7c7f34c71a0af4c39afc8dd71d17d591";
 	@Autowired
 	private OkHttpClient okHttpClinet;
 
