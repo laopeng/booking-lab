@@ -53,5 +53,14 @@ public interface LabStatusRepository extends HlmrRepository<LabStatus, LabStatus
 	 * @param pageable
 	 * @return
 	 */
-	Page<LabStatus> findByIdLabId(String labId, Pageable pageable);
+	Page<LabStatus> findByIdLabIdAndStudentNotNull(String labId, Pageable pageable);
+
+	/**
+	 * 查询有预约的实验室
+	 * 
+	 * @param labId
+	 * @param pageable
+	 * @return
+	 */
+	Page<LabStatus> findByStudentNotNull(Pageable pageable);
 }

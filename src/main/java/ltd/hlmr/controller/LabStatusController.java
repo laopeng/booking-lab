@@ -50,9 +50,9 @@ public class LabStatusController {
 	@PreAuthorize("hasAuthority('is_teacher')") 
 	public Page<LabStatus> findAllList(String labId, Pageable pageable) {
 		if (StringUtils.hasText(labId)) {
-			return labStatusRepository.findByIdLabId(labId, pageable);
+			return labStatusRepository.findByIdLabIdAndStudentNotNull(labId, pageable);
 		}
-		return labStatusRepository.findAll(pageable);
+		return labStatusRepository.findByStudentNotNull(pageable);
 	}
 
 	@GetMapping
